@@ -1,0 +1,23 @@
+.container {
+    /* width: 98vw; */
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  @media (max-width: 800px) {
+    .container {
+        flex-direction: column;
+    }
+  }
+
+  @media (max-width: 765px) {
+    .formContainer {
+        padding: 20px !important;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .formContainer {
+        padding: 20px 10px !important;
+    }
+  }

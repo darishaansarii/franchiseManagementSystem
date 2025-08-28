@@ -1,0 +1,19 @@
+{
+    "branches": [
+    {
+    "id": 1,
+    "name": "Lahore Branch",
+    "location": "Lahore",
+    "managerId": "branch_lhr",
+    "inventory": { "chicken": 50, "beef": 30, "mutton": 20, "bread": 100, "fries": 80 },
+    "employees": [ { "id": 1, "name": "Ali", "contact": "0300-1234567", "email": "ali@branch.com" } ],
+    "reviews": [ { "id": 1, "user": "Ahmed", "review": "Great food and service!" } ]
+    }
+    ],
+    "products": [
+    { "id": 1, "name": "Zinger Burger", "price": 450 },
+    { "id": 2, "name": "Fries", "price": 150 }
+    ],
+    "offers": [ { "id": 1, "discount": 20 } ],
+    "orders": [ { "id": 1, "userId": "user123", "branchId": 1, "product": "Zinger Burger", "quantity": 2 } ]
+    }
