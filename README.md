@@ -1,12 +1,56 @@
-# React + Vite
+# 🏢 Franchise Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A complete **Franchise Management System** built with **React.js, Firebase, Firestore, and Material UI**, providing role-based dashboards for **Admin, Branch Manager, and Customers**.  
 
-Currently, two official plugins are available:
+🔗 **Live Demo**: [Franchise Management System](https://franchise-management-system.netlify.app/)  
+💻 **GitHub Repo**: [Click Here](https://github.com/darishaansarii/franchiseManagementSystem)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 🔑 Authentication
+- Login & Signup with **Firebase Authentication**  
+- Role-based access: **Admin, Branch Manager, Customer**
+
+---
+
+### 👨‍💼 Admin Dashboard
+- **Projects Management**: Add, View, Edit & Delete Projects  
+- **Branches Management**: Add, View, Edit & Delete Branches  
+- **Inventory Access**: View all inventories added by Branch Manager, and update stock (quantity)  
+- **Offers Management**: Launch, Edit, Delete & View Offers  
+
+---
+
+### 🏬 Branch Manager Dashboard
+- **Inventories Management**: Add, View, Edit & Delete Inventories  
+- **Products Access**: View only products created by Admin  
+- **Employees Management**: Add, View, Edit & Delete Employees  
+- **Customer Reviews**: View customer reviews (read-only)  
+
+---
+
+### 🙋 Customer Dashboard
+- **Products Browsing**: View products created by Admin  
+- **Orders Management**: Place orders & View personal orders in **My Orders**  
+- **Offers**: View available offers from Admin, claim them (saved in **My Offers**)  
+- **Reviews**:  
+  - Add one personal review  
+  - Edit/Delete only their own review  
+  - View other customers’ reviews (read-only)  
+
+---
+
+## 🛠️ Tech Stack
+
+- **React.js** (Frontend)  
+- **Firebase Authentication** (Login/Signup)  
+- **Firebase Firestore** (Database)  
+- **Material UI (MUI)** & **MUI Icons** (UI Components)  
+- **React Router DOM** (Routing)  
+- **Redux Toolkit** (Login/Signup)  
+- **React Toastify** (Notifications)  
+- **Module CSS** (Styling)  
+
+---
