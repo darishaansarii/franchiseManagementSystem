@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   TextField,
@@ -10,7 +10,8 @@ import {
   Radio,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import styles from "../Base Container/BaseContainer.module.css"
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import styles from "../Base Container/BaseContainer.module.css";
 
 const BaseForm = ({
   title,
@@ -18,8 +19,10 @@ const BaseForm = ({
   onSubmit,
   initialValues = {},
   disableSuccessToast = false,
+  userData,
   toastValue,
   radioOptions,
+  disableSubmit = false,
 }) => {
   const [formData, setFormData] = React.useState({});
   const inputRefs = useRef([]);
@@ -27,17 +30,9 @@ const BaseForm = ({
 
   useEffect(() => {
     let initial = { ...initialValues };
-
-    if (
-      radioOptions &&
-      radioOptions.defaultValue &&
-      !initial[radioOptions.name]
-    ) {
-      initial[radioOptions.name] = radioOptions.defaultValue;
-    }
-
     setFormData(initial);
-  }, [initialValues, radioOptions]);
+  }, [initialValues]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -61,149 +56,94 @@ const BaseForm = ({
     fields.forEach((field) => {
       if (!formData[field.name] || String(formData[field.name]).trim() === "") {
         newErrors[field.name] = "This field is required";
-        toast.error(`${field.label} is required!`, {
-          position: "bottom-right",
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(`${field.label} is required!`);
         hasError = true;
       }
     });
 
-    if (radioOptions && !formData[radioOptions.name]) {
-      newErrors[radioOptions.name] = `${radioOptions.label} is required`;
-      toast.error(`${radioOptions.label} is required!`, {
-        position: "bottom-right",
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      hasError = true;
-    }
-
     setErrors(newErrors);
-
     if (hasError) return;
+
     onSubmit(formData);
 
     if (!disableSuccessToast) {
-      toast.success(`${toastValue} Successfully!`, {
-        position: "bottom-right",
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.success(`${toastValue} Successfully!`);
     }
   };
 
   return (
     <Box className={styles.baseContainer}>
-      <Typography variant="h4" sx={{ fontWeight: "bold" }} mb={2} color="#780606">
+      <Typography
+        variant="h4"
+        sx={{ fontWeight: "bold" }}
+        mb={2}
+        color="#780606"
+      >
         {title}
       </Typography>
-      <form onSubmit={handleSubmit}>
-      {fields.map((field, index) => (
-  field.type === "select" ? (
-    <TextField
-      key={index}
-      select
-      SelectProps={{ native: true }}
-      value={formData[field.name] || ""}
-      fullWidth
-      onKeyDown={(e) => handleKeyDown(e, index)}
-      inputRef={(el) => (inputRefs.current[index] = el)}
-      label={field.label}
-      name={field.name}
-      onChange={handleChange}
-      InputLabelProps={{ shrink: true }}
-      sx={{
-        "& label.Mui-focused": { color: "#780606" },
-        "& .MuiOutlinedInput-root": {
-          "& fieldset": { borderColor: "gray" },
-          "&:hover fieldset": { borderColor: "#780606" },
-          "&.Mui-focused fieldset": { borderColor: "#780606" },
-        },
-        pb: "10px",
-      }}
-    >
-      <option value="" disabled>
-        Select {field.label}
-      </option>
-      {field.options?.map((opt, idx) => (
-        <option key={idx} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </TextField>
-  ) : (
-    <TextField
-      key={index}
-      value={formData[field.name] || ""}
-      fullWidth
-      onKeyDown={(e) => handleKeyDown(e, index)}
-      inputRef={(el) => (inputRefs.current[index] = el)}
-      label={field.label}
-      name={field.name}
-      type={field.type || "text"}
-      onChange={handleChange}
-      InputLabelProps={{ shrink: true }}
-      sx={{
-        "& label.Mui-focused": { color: "#780606" },
-        "& .MuiOutlinedInput-root": {
-          "& fieldset": { borderColor: "gray" },
-          "&:hover fieldset": { borderColor: "#780606" },
-          "&.Mui-focused fieldset": { borderColor: "#780606" },
-        },
-        pb: "10px",
-      }}
-    />
-  )
-))}
 
-        {radioOptions && (
-          <Box mb={2}>
-            <FormLabel component="legend">{radioOptions.label}</FormLabel>
-            <RadioGroup
-              row
-              name={radioOptions.name}
-              value={formData[radioOptions.name] || ""}
-              onChange={handleChange}
-            >
-              {radioOptions.options.map((opt, idx) => (
-                <FormControlLabel
-                  key={idx}
-                  value={opt.value}
-                  control={
-                    <Radio
-                      sx={{
-                        color: "#780606",
-                        "&.Mui-checked": { color: "#780606" },
-                      }}
-                    />
-                  }
-                  label={opt.label}
-                />
-              ))}
-            </RadioGroup>
-          </Box>
-        )}
+      {userData && (
+  <Box mb={3} sx={{ border: "none", textAlign: "left" }}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <AccountCircleIcon sx={{ fontSize: 32, color: "#780606" }} />
+      <Typography
+        variant="h6"
+        sx={{ fontWeight: 600, color: "#333", border: "none" }}
+      >
+        {userData.name}
+      </Typography>
+    </Box>
+    <Typography
+      variant="body2"
+      sx={{ color: "gray", mt: -1.5, border: "none", textAlign: "left", ml: 1 }}
+    >
+      {userData.email}
+    </Typography>
+  </Box>
+)}
+
+
+      <form onSubmit={handleSubmit}>
+        {fields.map((field, index) => (
+          <TextField
+            key={index}
+            value={formData[field.name] || ""}
+            fullWidth
+            multiline={field.type === "textarea"}
+            minRows={4}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+            inputRef={(el) => (inputRefs.current[index] = el)}
+            label={field.label}
+            name={field.name}
+            type={field.type || "text"}
+            onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              pb: "10px",
+              width: "100%",
+              "& label.Mui-focused": {
+                color: "#780606",
+              },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "gray",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#780606",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#780606",
+                },
+              },
+            }}
+          />
+        ))}
+
         <Button
           ref={(el) => (inputRefs.current[fields.length] = el)}
           variant="contained"
           type="submit"
+          disabled={disableSubmit}
           fullWidth
           sx={{ bgcolor: "#780606" }}
         >

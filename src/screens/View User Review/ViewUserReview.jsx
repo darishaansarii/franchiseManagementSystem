@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseTable } from "../../components/Base Table/BaseTable";
 import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 
 const ViewUserReview = () => {
   const [dataArr, setDataArr] = React.useState([]);
@@ -29,24 +29,17 @@ const ViewUserReview = () => {
   return (
     <>
       <BaseTable
-        headers={[
-            "Name",
-            "Email",
-            "Number",
-            "Review"
-          ]}
-          keys={[
-            "name",
-            "email",
-            "number",
-            "review"
-          ]}
-        rows={dataArr}
-        onDelete={handleDelete}
-        editPath="/edit-review"
-        btnText="Review"
-        btnNavigatePath="/review"
-      />
+  headers={["Name", "Email", "Review"]}
+  keys={["name", "email", "review"]}
+  currentUserId={auth.currentUser?.uid}
+  rows={dataArr}
+  onDelete={handleDelete}
+  editPath="/edit-review"
+  btnText="Review"
+  btnNavigatePath="/review"
+  disableAdd={dataArr.some((item) => item.uid === auth.currentUser?.uid)}
+/>
+
     </>
   );
 };

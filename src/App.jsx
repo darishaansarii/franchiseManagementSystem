@@ -3,10 +3,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Login from "./screens/Login/Login.jsx";
 import Signup from "./screens/Signup/Signup.jsx";
 import AuthRoute from "./routes/authRoute";
-import ProtectedRoutes from "./routes/protectedRoutes";
-import Dashboard from "./screens/Dashboard";
 import { ToastContainer } from "react-toastify";
-// import { Navbar } from "./components/Navbar/Navbar.jsx";
 import AdminDashboard from "./screens/Admin Dashboard/AdminDashboard.jsx";
 import BranchDashboard from "./screens/Branch Dashboard/BranchDashboard.jsx";
 import UserDashboard from "./screens/User Dashboard/UserDashboard.jsx";
@@ -42,15 +39,9 @@ import ViewUserOffers from "./screens/View User Offers/ViewUserOffers.jsx";
 import MyOffers from "./screens/My Offers/MyOffers.jsx";
 
 function App() {
-  // const location = useLocation();
-
-  // const hideNavbarRoutes = ["/", "/signup"];
-
-  // const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   return (
     <>
-      {/* {!shouldHideNavbar && <Navbar />} */}
       <Routes>
         <Route element={<AuthRoute />}>
           <Route path="/" element={<Login />} />

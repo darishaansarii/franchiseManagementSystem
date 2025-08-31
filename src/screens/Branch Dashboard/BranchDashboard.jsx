@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../../firebase";
 import { Button, Stack } from "@mui/material";
@@ -35,15 +35,11 @@ const BranchDashboard = () => {
     const user = auth.currentUser;
 
     if (user) {
-      const fetchUserName = async () => {
+const fetchUserName = async () => {
         try {
-          const q = query(
-            collection(db, "Users"),
-            where("uid", "==", user.uid)
-          );
-          const querySnapshot = await getDocs(q);
-          if (!querySnapshot.empty) {
-            const userData = querySnapshot.docs[0].data();
+          const userDoc = await getDoc(doc(db, "Users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
             setName(userData.name || user.email);
           } else {
             setName(user.email);
@@ -52,7 +48,7 @@ const BranchDashboard = () => {
           console.error("Error fetching user name:", err);
           setName(user.email);
         }
-      };
+      };     
       fetchUserName();
     }
   }, []);

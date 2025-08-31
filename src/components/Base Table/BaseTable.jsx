@@ -23,6 +23,8 @@ export const BaseTable = ({
   btnNavigatePath,
   columnWidths = {},
   hideActions = false,
+  currentUserId, 
+  disableAdd = false, 
 }) => {
   const navigate = useNavigate();
 
@@ -79,7 +81,7 @@ export const BaseTable = ({
                 <StyledTableCell
                   key={i}
                   align="left"
-                  sx={{ width: columnWidths[keys[i]] || "auto" }}
+                  sx={{ width: keys[i] === "review" ? "50%" : columnWidths[keys[i]] || "auto" }} 
                 >
                   {header}
                 </StyledTableCell>
@@ -89,58 +91,72 @@ export const BaseTable = ({
           </TableHead>
 
           <TableBody>
-  {rows.map((row, index) => (
-    <StyledTableRow key={index}>
-      {keys.map((key, i) => (
-        <StyledTableCell
-          key={i}
-          align="left"
-          sx={{ width: columnWidths[key] || "auto" }}
-        >
-          {row[key] !== undefined && row[key] !== null ? String(row[key]) : "_"}
-        </StyledTableCell>
-      ))}
-      {!hideActions && (
-        <StyledTableCell align="left">
-          <Box sx={{ display: "flex", gap: "20px" }}>
-            <EditIcon
-              onClick={() => navigate(`${editPath}/${row.id}`)}
-              sx={{ color: "#e7c137", fontSize: "20px", cursor: "pointer" }}
-            />
-            <DeleteIcon
-              onClick={() => onDelete(row.id)}
-              sx={{ color: "red", fontSize: "20px", cursor: "pointer" }}
-            />
-          </Box>
-        </StyledTableCell>
-      )}
-    </StyledTableRow>
-  ))}
-</TableBody>
-
+            {rows.map((row, index) => (
+              <StyledTableRow key={index}>
+                {keys.map((key, i) => (
+                  <StyledTableCell
+                    key={i}
+                    align="left"
+                    sx={{ width: key === "review" ? "50%" : columnWidths[key] || "auto" }} 
+                  >
+                    {row[key] !== undefined && row[key] !== null
+                      ? String(row[key])
+                      : "_"}
+                  </StyledTableCell>
+                ))}
+                {!hideActions && (
+                  <StyledTableCell align="left">
+                    {row.uid === currentUserId ? (
+                      <Box sx={{ display: "flex", gap: "20px" }}>
+                        <EditIcon
+                          onClick={() => navigate(`${editPath}/${row.id}`)}
+                          sx={{
+                            color: "#e7c137",
+                            fontSize: "20px",
+                            cursor: "pointer",
+                          }}
+                        />
+                        <DeleteIcon
+                          onClick={() => onDelete(row.id)}
+                          sx={{
+                            color: "red",
+                            fontSize: "20px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Box>
+                    ) : (
+                      "-" 
+                    )}
+                  </StyledTableCell>
+                )}
+              </StyledTableRow>
+            ))}
+          </TableBody>
         </Table>
       </TableContainer>
 
       {!hideActions && (
-  <Button
-    sx={{
-      marginTop: "10px !important",
-      borderColor: "#780606",
-      color: "#780606",
-      transition: "all 0.3s ease",
-      "&:hover": {
-        backgroundColor: "#780606",
-        color: "#fff",
-        borderColor: "#780606",
-      },
-    }}
-    variant="outlined"
-    fullWidth
-    onClick={() => navigate(btnNavigatePath)}
-  >
-    Add {btnText}
-  </Button>
-)}
+        <Button
+          sx={{
+            marginTop: "10px !important",
+            borderColor: "#780606",
+            color: "#780606",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: "#780606",
+              color: "#fff",
+              borderColor: "#780606",
+            },
+          }}
+          variant="outlined"
+          fullWidth
+          disabled={disableAdd}
+          onClick={() => navigate(btnNavigatePath)}
+        >
+          Add {btnText}
+        </Button>
+      )}
     </Box>
   );
 };

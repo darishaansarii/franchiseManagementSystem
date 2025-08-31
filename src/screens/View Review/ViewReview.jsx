@@ -24,13 +24,11 @@ const BranchReview = () => {
         headers={[
           "Name",
           "Email",
-          "Number",
           "Review"
         ]}
         keys={[
           "name",
           "email",
-          "number",
           "review"
         ]}
         rows={dataArr}
