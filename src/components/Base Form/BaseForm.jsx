@@ -4,10 +4,6 @@ import {
   TextField,
   Button,
   Typography,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -83,61 +79,109 @@ const BaseForm = ({
       </Typography>
 
       {userData && (
-  <Box mb={3} sx={{ border: "none", textAlign: "left" }}>
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <AccountCircleIcon sx={{ fontSize: 32, color: "#780606" }} />
-      <Typography
-        variant="h6"
-        sx={{ fontWeight: 600, color: "#333", border: "none" }}
-      >
-        {userData.name}
-      </Typography>
-    </Box>
-    <Typography
-      variant="body2"
-      sx={{ color: "gray", mt: -1.5, border: "none", textAlign: "left", ml: 1 }}
-    >
-      {userData.email}
-    </Typography>
-  </Box>
-)}
-
+        <Box mb={3} sx={{ border: "none", textAlign: "left" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <AccountCircleIcon sx={{ fontSize: 32, color: "#780606" }} />
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, color: "#333", border: "none" }}
+            >
+              {userData.name}
+            </Typography>
+          </Box>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "gray",
+              mt: -1.5,
+              border: "none",
+              textAlign: "left",
+              ml: 1,
+            }}
+          >
+            {userData.email}
+          </Typography>
+        </Box>
+      )}
 
       <form onSubmit={handleSubmit}>
-        {fields.map((field, index) => (
-          <TextField
-            key={index}
-            value={formData[field.name] || ""}
-            fullWidth
-            multiline={field.type === "textarea"}
-            minRows={4}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-            inputRef={(el) => (inputRefs.current[index] = el)}
-            label={field.label}
-            name={field.name}
-            type={field.type || "text"}
-            onChange={handleChange}
-            InputLabelProps={{ shrink: true }}
-            sx={{
-              pb: "10px",
-              width: "100%",
-              "& label.Mui-focused": {
-                color: "#780606",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "gray",
+        {fields.map((field, index) =>
+          field.type === "select" ? (
+            <TextField
+              key={index}
+              select
+              value={formData[field.name] || ""}
+              onChange={handleChange}
+              label={field.label}
+              name={field.name}
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              SelectProps={{
+                native: true, 
+              }}
+              sx={{
+                pb: "10px",
+                width: "100%",
+                "& label.Mui-focused": {
+                  color: "#780606",
                 },
-                "&:hover fieldset": {
-                  borderColor: "#780606",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "gray",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#780606",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#780606",
+                  },
                 },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#780606",
+              }}
+            >
+              <option value="" disabled>
+                Select {field.label}
+              </option>
+              {field.options?.map((option, i) => (
+                <option key={i} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </TextField>
+          ) : (
+            <TextField
+              key={index}
+              value={formData[field.name] || ""}
+              fullWidth
+              multiline={field.type === "textarea"}
+              minRows={field.type === "textarea" ? 4 : 1}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              inputRef={(el) => (inputRefs.current[index] = el)}
+              label={field.label}
+              name={field.name}
+              type={field.type || "text"}
+              onChange={handleChange}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                pb: "10px",
+                width: "100%",
+                "& label.Mui-focused": {
+                  color: "#780606",
                 },
-              },
-            }}
-          />
-        ))}
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "gray",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#780606",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#780606",
+                  },
+                },
+              }}
+            />
+          )
+        )}
 
         <Button
           ref={(el) => (inputRefs.current[fields.length] = el)}

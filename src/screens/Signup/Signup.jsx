@@ -52,75 +52,120 @@ const Signup = () => {
     }
   };
 
+  // const signup = (e) => {
+  //   e.preventDefault();
+
+  //   if (!name || !email || !password || !role) {
+  //     toast.error("Please fill all the fields!", {
+  //       position: getToastPosition(),
+  //       autoClose: 2500,
+  //       hideProgressBar: false,
+  //       closeOnClick: false,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //     });
+  //     return;
+  //   }
+
+  //   dispatch(loginStart());
+
+  //   createUserWithEmailAndPassword(auth, email, password)
+  //     .then(async (userCredential) => {
+  //       const user = userCredential.user;
+  //       console.log(user);
+
+  //       let userObj = {
+  //         name,
+  //         email,
+  //         role
+  //       };
+
+  //       await setDoc(doc(db, "Users", user.uid), userObj);
+
+  //       toast.success("Signup successfully!", {
+  //         position: getToastPosition(),
+  //         autoClose: 2500,
+  //         hideProgressBar: false,
+  //         closeOnClick: false,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "light",
+  //       });
+
+  //       setTimeout(() => {
+  //         navigate("/");
+  //       }, 1500);
+
+  //       dispatch(loginSuccess(userObj));
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       dispatch(loginFailure(errorMessage));
+
+  //       console.log(errorMessage);
+
+  //       toast.error(errorMessage, {
+  //         position: getToastPosition(),
+  //         autoClose: 2500,
+  //         hideProgressBar: false,
+  //         closeOnClick: false,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "light",
+  //       });
+  //     });
+  // };
+
   const signup = (e) => {
     e.preventDefault();
-
+  
     if (!name || !email || !password || !role) {
       toast.error("Please fill all the fields!", {
         position: getToastPosition(),
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
       });
       return;
     }
-
+  
     dispatch(loginStart());
-
+  
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        console.log(user);
-
+        await user.getIdToken(true);
         let userObj = {
+          uid: user.uid,
           name,
           email,
-          role
+          role,
         };
-
+  
         await setDoc(doc(db, "Users", user.uid), userObj);
-
-        toast.success("Signup successfully!", {
-          position: getToastPosition(),
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
-
+  
         dispatch(loginSuccess(userObj));
+  
+        toast.success("Signup successful!", {
+          position: getToastPosition(),
+        });
+  
+        setTimeout(() => {
+          if (role === "admin") navigate("/admin-dashboard");
+          else if (role === "branchManager") navigate("/branch-dashboard");
+          else navigate("/user-dashboard");
+        }, 1500);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        dispatch(loginFailure(errorMessage));
-
-        console.log(errorMessage);
-
-        toast.error(errorMessage, {
+        dispatch(loginFailure(error.message));
+        toast.error(error.message, {
           position: getToastPosition(),
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
         });
       });
   };
-
+  
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {

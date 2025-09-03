@@ -5,7 +5,8 @@ import { auth, db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginStart, loginSuccess } from "../../slices/authSlice";
-import img from "../../assets/login2.jpg"
+  import { signOut } from "firebase/auth";
+  import img from "../../assets/login2.jpg"
 import {
   Box,
   Button,
@@ -62,121 +63,180 @@ const Login = () => {
     setRole(event.target.value);
   };
 
-  const login = (e) => {
-    e.preventDefault();
+  // const login = (e) => {
+  //   e.preventDefault();
 
-    if (!email || !password) {
-      toast.error("Please fill all the fields!", {
-        position: getToastPosition(),
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return;
-    }
-    dispatch(loginStart());
+  //   if (!email || !password) {
+  //     toast.error("Please fill all the fields!", {
+  //       position: getToastPosition(),
+  //       autoClose: 2500,
+  //       hideProgressBar: false,
+  //       closeOnClick: false,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //     });
+  //     return;
+  //   }
+  //   dispatch(loginStart());
 
-    // signInWithEmailAndPassword(auth, email, password)
-    //   .then(async (userCredential) => {
-    //     const user = userCredential.user;
-    //     console.log(user);
+  //   // signInWithEmailAndPassword(auth, email, password)
+  //   //   .then(async (userCredential) => {
+  //   //     const user = userCredential.user;
+  //   //     console.log(user);
 
-    //     const getData = await getDoc(doc(db, "Users", user.uid));
+  //   //     const getData = await getDoc(doc(db, "Users", user.uid));
 
-    //     const finalUser = {
-    //       uid: user.uid,
-    //       email: user.email,
-    //       ...getData.data(),
-    //     };
+  //   //     const finalUser = {
+  //   //       uid: user.uid,
+  //   //       email: user.email,
+  //   //       ...getData.data(),
+  //   //     };
 
-    //     dispatch(loginSuccess(finalUser));
+  //   //     dispatch(loginSuccess(finalUser));
 
-    //     toast.success("Login successfully!", {
-    //       position: getToastPosition(),
-    //       autoClose: 2500,
-    //       hideProgressBar: false,
-    //       closeOnClick: false,
-    //       pauseOnHover: true,
-    //       draggable: true,
-    //       progress: undefined,
-    //       theme: "light",
-    //     });
+  //   //     toast.success("Login successfully!", {
+  //   //       position: getToastPosition(),
+  //   //       autoClose: 2500,
+  //   //       hideProgressBar: false,
+  //   //       closeOnClick: false,
+  //   //       pauseOnHover: true,
+  //   //       draggable: true,
+  //   //       progress: undefined,
+  //   //       theme: "light",
+  //   //     });
 
-    //     setTimeout(() => {
-    //       navigate("/dashboard");
-    //     }, 1500);
-    //   })
-    //   .catch((error) => {
-    //     const errorMessage = error.message;
-    //     dispatch(loginFailure(errorMessage));
+  //   //     setTimeout(() => {
+  //   //       navigate("/dashboard");
+  //   //     }, 1500);
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     const errorMessage = error.message;
+  //   //     dispatch(loginFailure(errorMessage));
 
-    //     console.log(errorMessage);
-    //     toast.error("Email or password is incorrect!", {
-    //       position: getToastPosition(),
-    //       autoClose: 2500,
-    //       hideProgressBar: false,
-    //       closeOnClick: false,
-    //       pauseOnHover: true,
-    //       draggable: true,
-    //       progress: undefined,
-    //       theme: "light",
-    //     });
-    //   });
+  //   //     console.log(errorMessage);
+  //   //     toast.error("Email or password is incorrect!", {
+  //   //       position: getToastPosition(),
+  //   //       autoClose: 2500,
+  //   //       hideProgressBar: false,
+  //   //       closeOnClick: false,
+  //   //       pauseOnHover: true,
+  //   //       draggable: true,
+  //   //       progress: undefined,
+  //   //       theme: "light",
+  //   //     });
+  //   //   });
 
-    signInWithEmailAndPassword(auth, email, password)
-  .then(async (userCredential) => {
-    const user = userCredential.user;
-    const getData = await getDoc(doc(db, "Users", user.uid));
+  //   signInWithEmailAndPassword(auth, email, password)
+  // .then(async (userCredential) => {
+  //   const user = userCredential.user;
+  //   const getData = await getDoc(doc(db, "Users", user.uid));
 
-    if (!getData.exists()) {
-      toast.error("User data not found!", { position: getToastPosition() });
-      return;
-    }
+  //   if (!getData.exists()) {
+  //     toast.error("User data not found!", { position: getToastPosition() });
+  //     return;
+  //   }
 
-    const userData = getData.data();
+  //   const userData = getData.data();
 
-    if (userData.role !== role) {
-      toast.error("Role mismatch! Please select the correct role.", {
-        position: getToastPosition(),
-      });
-      return;
-    }
+  //   if (userData.role !== role) {
+  //     toast.error("Role mismatch! Please select the correct role.", {
+  //       position: getToastPosition(),
+  //     });
+  //     return;
+  //   }
 
-    const finalUser = {
-      uid: user.uid,
-      email: user.email,
-      ...userData,
-    };
+  //   const finalUser = {
+  //     uid: user.uid,
+  //     email: user.email,
+  //     ...userData,
+  //   };
 
-    dispatch(loginSuccess(finalUser));
+  //   dispatch(loginSuccess(finalUser));
 
-    toast.success("Login successfully!", {
+  //   toast.success("Login successfully!", {
+  //     position: getToastPosition(),
+  //     autoClose: 2500,
+  //   });
+
+  //   setTimeout(() => {
+  //     if (role === "admin") {
+  //       navigate("/admin-dashboard");
+  //     } else if (role === "branchManager") {
+  //       navigate("/branch-dashboard");
+  //     } else {
+  //       navigate("/user-dashboard");
+  //     }
+  //   }, 1500);
+  // })
+  // .catch((error) => {
+  //   dispatch(loginFailure(error.message));
+  //   toast.error("Email or password is incorrect!", {
+  //     position: getToastPosition(),
+  //   });
+  // });
+
+  // };
+  
+
+const login = (e) => {
+  e.preventDefault();
+
+  if (!email || !password || !role) {
+    toast.error("Please fill all the fields!", {
       position: getToastPosition(),
-      autoClose: 2500,
     });
+    return;
+  }
 
-    setTimeout(() => {
-      if (role === "admin") {
-        navigate("/admin-dashboard");
-      } else if (role === "branchManager") {
-        navigate("/branch-dashboard");
-      } else {
-        navigate("/user-dashboard");
+  dispatch(loginStart());
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      const getData = await getDoc(doc(db, "Users", user.uid));
+
+      if (!getData.exists()) {
+        toast.error("User data not found!", { position: getToastPosition() });
+        return;
       }
-    }, 1500);
-  })
-  .catch((error) => {
-    dispatch(loginFailure(error.message));
-    toast.error("Email or password is incorrect!", {
-      position: getToastPosition(),
-    });
-  });
 
-  };
+      const userData = getData.data();
+
+      if (userData.role !== role) {
+        await signOut(auth);
+        toast.error("Role mismatch! Please select the correct role.", {
+          position: getToastPosition(),
+        });
+        return;
+      }
+
+      const finalUser = {
+        uid: user.uid,
+        email: user.email,
+        ...userData,
+      };
+
+      dispatch(loginSuccess(finalUser));
+
+      toast.success("Login successful!", { position: getToastPosition() });
+
+      setTimeout(() => {
+        if (role === "admin") navigate("/admin-dashboard");
+        else if (role === "branchManager") navigate("/branch-dashboard");
+        else navigate("/user-dashboard");
+      }, 1500);
+    })
+    .catch((error) => {
+      dispatch(loginFailure(error.message));
+      toast.error("Email or password is incorrect!", {
+        position: getToastPosition(),
+      });
+    });
+};
+
+  
   return (
     <>
       <Box className={`${styles.container} ${styles.slideIn}`}>
